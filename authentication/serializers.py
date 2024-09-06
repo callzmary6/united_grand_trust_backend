@@ -15,7 +15,7 @@ class AccountManagerSerializer(serializers.Serializer):
     last_name = serializers.CharField(max_length=15)
     phone_number = serializers.CharField(max_length=20)
     password = serializers.CharField(write_only=True)
-    is_admin = serializers.CharField(default=True)
+    isAdmin = serializers.CharField(default=True)
     role = serializers.CharField(read_only=True)
     is_authenticated = serializers.CharField(default=True)
     createdAt = serializers.DateTimeField(read_only=True)
