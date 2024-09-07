@@ -55,7 +55,7 @@ class RegisterAccountManager(generics.GenericAPIView):
             return BaseResponse.response(status=True, message='account created succesfully', data=data, HTTP_STATUS=status.HTTP_201_CREATED)
         return BaseResponse.response(status=False, message=serializer.errors, HTTP_STATUS=status.HTTP_400_BAD_REQUEST)
         
-    
+
 class CheckToken(generics.GenericAPIView):
     def get(self, request, token):
 
@@ -119,7 +119,7 @@ class LoginAccountManager(generics.GenericAPIView):
             status=True,
             message='You have logged in successfully',
             data=data,
-            HTTP_STATUS=status.HTTP_201_CREATED
+            HTTP_STATUS=status.HTTP_200_OK
         )
 
 class CreateAccountUser(generics.GenericAPIView):
@@ -127,6 +127,7 @@ class CreateAccountUser(generics.GenericAPIView):
     def post(self, request):
         data = request.data
         user = request.user
+        isAnonymous = False
         if isinstance(user, AnonymousUser):
             isAnonymous = True
             user = AccountManager.get_account_manager()
