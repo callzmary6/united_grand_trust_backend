@@ -41,7 +41,12 @@ class SendLoanOtp(generics.GenericAPIView):
 
         auth_util.email_send(data)
 
-        return BaseResponse.response(status=True, message='Opt sent successfully', HTTP_STATUS=status.HTTP_200_OK)
+        otp_data = {
+            otp: otp,
+            "user_email": user['email']
+        }
+
+        return BaseResponse.response(status=True, message='Opt sent successfully',  data=otp_data, HTTP_STATUS=status.HTTP_200_OK)
 
 
 class RequestLoanAPIView(generics.GenericAPIView):

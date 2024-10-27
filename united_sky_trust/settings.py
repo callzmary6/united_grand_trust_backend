@@ -153,7 +153,7 @@ cloudinary.config(
 )
 
 # EMAIL CONFIGURATION
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS= True
 EMAIL_HOST = 'smtp.titan.email'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
