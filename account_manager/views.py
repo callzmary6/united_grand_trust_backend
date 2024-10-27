@@ -50,7 +50,7 @@ class GetRegisteredUsers(generics.GenericAPIView):
                 {'account_balance': search_regex},
             ]
         
-        sorted_users = db.account_user.find(query, {'is_authenticated': 0, 'password': 0, 'account_manager_id': 0, 'is_verified_otp': 0, 'is_verified_cot': 0, 'is_verified_imf': 0}).sort('createdAt', pymongo.DESCENDING)
+        sorted_users = db.account_user.find(query, {'is_authenticated': 0, 'account_manager_id': 0, 'is_verified_otp': 0, 'is_verified_cot': 0, 'is_verified_imf': 0}).sort('createdAt', pymongo.DESCENDING)
 
         paginator = Paginator(list(sorted_users), entry)
         page_obj = paginator.get_page(page)
@@ -79,7 +79,7 @@ class GetUserDetail(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, id):
         account_manager = request.user
-        except_fields = {'password': 0, 'is_verified_cot': 0, 'is_verified_imf': 0, 'is_verified_otp': 0, 'is_authenticated': 0, 'full_name': 0}
+        except_fields = {'is_verified_cot': 0, 'is_verified_imf': 0, 'is_verified_otp': 0, 'is_authenticated': 0, 'full_name': 0}
         account_user = db.account_user.find_one({'_id': ObjectId(id), 'account_manager_id': account_manager['_id']}, except_fields)
 
         if account_user is None:

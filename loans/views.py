@@ -6,9 +6,13 @@ from authentication.utils import Util as auth_util
 
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 
 from united_sky_trust.base_response import BaseResponse
+
+import re
+import pymongo
 
 
 db = settings.DB
@@ -26,7 +30,7 @@ class SendLoanOtp(generics.GenericAPIView):
         }
 
         data = {
-            'to': user["email"],
+            'to': user['email'],
             'body': 'Use this otp to verify your transaction',
             'subject': 'Verify Transaction',
             'html_template': render_to_string('loan-otp.html', context)
@@ -79,10 +83,63 @@ class RequestLoanAPIView(generics.GenericAPIView):
             serializer.validated_data["last_name"] = user["last_name"]
             serializer.validated_data["middle_name"] = user["middle_name"]
             serializer.validated_data["email"] = user["email"]
+            serializer.validated_data['account_manager_id'] = user['account_manager_id']
+            serializer.validated_data['loan_currency'] = user['account_currency']
 
             serializer.save()
 
             return BaseResponse.response(status=True, message="Loan request successful", HTTP_STATUS=status.HTTP_200_OK)
         
         return BaseResponse.error_response(message='Auth pin is not correct!', status_code=status.HTTP_400_BAD_REQUEST)
+    
+
+
+# Admin Section for Loan
+
+class GetLoansAPIView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_id = request.user['_id']
+        entry = int(request.GET.get('entry', 10))
+        page = int(request.GET.get('page', 1))
+        search = request.GET.get('search', '')
+
+        query = {'account_manager_id': user_id}
+
+        if search:
+            search_regex = re.compile(re.escape(search), re.IGNORECASE)
+            query['$or'] = [
+                {'first_name': search_regex},
+                {'middle_name': search_regex},
+                {'last_name': search_regex},
+                {'amount': search_regex},
+                {'loan_type': search_regex},
+                {'status': search_regex},
+            ]
+        
+        sorted_loans = db.loans.find(query, {'account_manager_id': 0}).sort('createdAt', pymongo.DESCENDING)
+
+        paginator = Paginator(list(sorted_loans), entry)
+        page_obj = paginator.get_page(page)
+
+        new_loans = []
+
+        for user in page_obj:
+            user['_id'] = str(user['_id'])
+            new_loans.append(user)
+
+        total_loans = len(new_loans)
+        
+        data = {
+            'loans': new_loans,
+            'total_loans': total_loans,
+            'current_page': page
+        }
+
+        return BaseResponse.response(
+            status=True,
+            HTTP_STATUS=status.HTTP_200_OK,
+            data=data
+        )
         
