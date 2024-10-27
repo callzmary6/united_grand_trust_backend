@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'authentication',
     'account_manager', 
     'account_user',
+    'loans',
 ]
 
 MIDDLEWARE = [
@@ -152,9 +153,9 @@ cloudinary.config(
 )
 
 # EMAIL CONFIGURATION
-EMAIL_USE_SSL = True
+EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.titan.email'
-EMAIL_PORT = 465
+EMAIL_PORT = 587
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 

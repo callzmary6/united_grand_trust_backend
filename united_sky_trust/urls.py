@@ -8,6 +8,7 @@ urlpatterns = [
     path('authentication/', include('authentication.urls')),
     path('acct_manager/', include('account_manager.urls')),
     path('acct_user/', include('account_user.urls')),
+    path('loan/', include('loans.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
