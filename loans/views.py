@@ -13,6 +13,7 @@ from united_sky_trust.base_response import BaseResponse
 
 import re
 import pymongo
+from bson import ObjectId
 
 
 db = settings.DB
@@ -147,4 +148,29 @@ class GetLoansAPIView(generics.GenericAPIView):
             HTTP_STATUS=status.HTTP_200_OK,
             data=data
         )
+
+
+class ApproveLoanAPIView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, id):
+        loan = db.loans.find_one({'_id': ObjectId(id)})
+        if loan['isApproved'] == True:
+            update = {'$set': {'isApproved': False, 'status': 'Pending'}}
+            db.loans.update_one({'_id': ObjectId(id)}, update)
+            return BaseResponse.response(status=True, message='Loan is pending', HTTP_STATUS=status.HTTP_200_OK)
+
+        update = {'$set': {'isApproved': True, 'status': 'Approved'}}
+        db.loans.update_one({'_id': ObjectId(id)}, update)
+        return BaseResponse.response(status=True, message='Loan is approved', HTTP_STATUS=status.HTTP_200_OK)
         
+
+class RejectLoanAPIView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, id): 
+        update = {'$set': {'isApproved': False, 'status': 'Rejected'}}
+        db.loans.update_one({'_id': ObjectId(id)}, update)
+        return BaseResponse.response(status=True, message='Loan is pending', HTTP_STATUS=status.HTTP_200_OK)
+
+

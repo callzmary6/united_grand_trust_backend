@@ -27,6 +27,7 @@ class Loan(serializers.Serializer):
     def create(self, validated_data):
         validated_data["ref_number"] = manager_utils.generate_code()
         validated_data["createdAt"] = datetime.now()
+        validated_data["isApproved"] = False
         validated_data["status"] = "Pending"
         return db.loans.insert_one(validated_data)
         

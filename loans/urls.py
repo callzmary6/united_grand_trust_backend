@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import RequestLoanAPIView, SendLoanOtp, GetLoansAPIView
+from .views import RequestLoanAPIView, SendLoanOtp, GetLoansAPIView, ApproveLoanAPIView, RejectLoanAPIView
 
 
 urlpatterns = [
@@ -10,4 +10,6 @@ urlpatterns = [
     # Admin Paths
 
     path('all', GetLoansAPIView.as_view(), name="all-loans"),
+    path('approve/<str:id>', ApproveLoanAPIView.as_view(), name="approve-loan"),
+    path('reject/<str:id>', RejectLoanAPIView.as_view(), name="reject-loan"),
 ]
