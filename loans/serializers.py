@@ -20,6 +20,7 @@ class Loan(serializers.Serializer):
     loan_currency = serializers.CharField(read_only=True)
     status =serializers.CharField(read_only=True)
     isApproved = serializers.CharField(read_only=True, default=False)
+    loan_user_id = serializers.CharField(read_only=True)
     email = serializers.EmailField(read_only=True)
     createdAt = serializers.CharField(read_only=True)
 

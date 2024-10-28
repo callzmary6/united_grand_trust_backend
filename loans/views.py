@@ -90,6 +90,7 @@ class RequestLoanAPIView(generics.GenericAPIView):
             serializer.validated_data["middle_name"] = user["middle_name"]
             serializer.validated_data["email"] = user["email"]
             serializer.validated_data['account_manager_id'] = user['account_manager_id']
+            serializer.validated_data['loan_user_id'] = str(user['_id'])
             serializer.validated_data['loan_currency'] = user['account_currency']
 
             serializer.save()
@@ -124,7 +125,7 @@ class GetLoansAPIView(generics.GenericAPIView):
                 {'status': search_regex},
             ]
         
-        sorted_loans = db.loans.find(query, {'account_manager_id': 0}).sort('createdAt', pymongo.DESCENDING)
+        sorted_loans = db.loans.find(query, {'account_manager_id': 0, 'loan_user_id': 0}).sort('createdAt', pymongo.DESCENDING)
 
         paginator = Paginator(list(sorted_loans), entry)
         page_obj = paginator.get_page(page)
@@ -132,7 +133,7 @@ class GetLoansAPIView(generics.GenericAPIView):
         new_loans = []
 
         for user in page_obj:
-            user['_id'] = str(user['_id'])
+            user['_id'] = str(user['_id']),
             new_loans.append(user)
 
         total_loans = len(new_loans)
@@ -157,7 +158,8 @@ class ApproveLoanAPIView(generics.GenericAPIView):
         loan = db.loans.find_one({'_id': ObjectId(id)})
         if loan['isApproved'] == True:
             update = {'$set': {'isApproved': False, 'status': 'Pending'}}
-            db.loans.update_one({'_id': ObjectId(id)}, update)
+            updated_loans = db.loans.find_one_and_update({'_id': ObjectId(id)}, update, return_document=pymongo.ReturnDocument.AFTER)
+            db.account_user.find_one_and_update({'_id': updated_loans['loan_user_id']}, {'$inc': {'account_balance': updated_loans['amount']}}, return_document=pymongo.ReturnDocument.AFTER)
             return BaseResponse.response(status=True, message='Loan is pending', HTTP_STATUS=status.HTTP_200_OK)
 
         update = {'$set': {'isApproved': True, 'status': 'Approved'}}

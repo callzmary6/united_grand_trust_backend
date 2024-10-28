@@ -312,7 +312,7 @@ class SuspendAccountUser(generics.GenericAPIView):
             update = {'$set': {'isSuspended': False,}}
             db.account_user.update_one({'_id': ObjectId(acc_id)}, update)
             return BaseResponse.response(status=True, message='Account is active', HTTP_STATUS=status.HTTP_200_OK)
-
+    
         update = {'$set': {'isSuspended': True}}
         db.account_user.update_one({'_id': ObjectId(acc_id)}, update)
         return BaseResponse.response(status=True, message='Account is suspended', HTTP_STATUS=status.HTTP_200_OK)
