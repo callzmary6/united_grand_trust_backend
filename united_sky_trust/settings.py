@@ -159,7 +159,7 @@ EMAIL_USE_TLS= True
 EMAIL_HOST = 'smtp.titan.email'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'info@unitedgrandtrust.com'
-EMAIL_HOST_PASSWORD = 'Info@Unitedgrandtrust123?'
+EMAIL_HOST_PASSWORD = 'Info@Unitedgrandtrust123'
 
 # CORS SETTINGS
 CORS_ORIGIN_ALLOW_ALL = True

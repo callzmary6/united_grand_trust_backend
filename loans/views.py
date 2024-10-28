@@ -171,6 +171,6 @@ class RejectLoanAPIView(generics.GenericAPIView):
     def patch(self, request, id): 
         update = {'$set': {'isApproved': False, 'status': 'Rejected'}}
         db.loans.update_one({'_id': ObjectId(id)}, update)
-        return BaseResponse.response(status=True, message='Loan is pending', HTTP_STATUS=status.HTTP_200_OK)
+        return BaseResponse.response(status=True, message='Loan is Rejected', HTTP_STATUS=status.HTTP_200_OK)
 
 
