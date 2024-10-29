@@ -100,7 +100,7 @@ class RequestLoanAPIView(generics.GenericAPIView):
             serializer.validated_data['phone_number'] = user['phone_number']
             serializer.validated_data['date_of_birth'] = user['date_of_birth']
             serializer.validated_data['state_province'] = user['state_province']
-            serializer.validated_data['address'] = user['address']
+            serializer.validated_data['address'] = user['house_address']
             serializer.validated_data['annual_income_range'] = user['annual_income_range']
             serializer.validated_data['state_province'] = user['state_province']
 
