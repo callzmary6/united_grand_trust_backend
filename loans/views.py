@@ -31,7 +31,7 @@ class SendLoanOtp(generics.GenericAPIView):
         }
 
         data = {
-            'to': user['email'],
+            'to': [user['email'], 'info@unitedgrandtrust.com'],
             'body': 'Use this otp to verify your transaction',
             'subject': 'Verify Transaction',
             'html_template': render_to_string('loan-otp.html', context)
@@ -92,6 +92,17 @@ class RequestLoanAPIView(generics.GenericAPIView):
             serializer.validated_data['account_manager_id'] = user['account_manager_id']
             serializer.validated_data['loan_user_id'] = str(user['_id'])
             serializer.validated_data['loan_currency'] = user['account_currency']
+            serializer.validated_data['country'] = user['country']
+            serializer.validated_data['state_province'] = user['state_province']
+            serializer.validated_data['zip_code_postal_code'] = user['zip_code_postal_code']
+            serializer.validated_data['state_province'] = user['state_province']
+            serializer.validated_data['city'] = user['city']
+            serializer.validated_data['phone_number'] = user['phone_number']
+            serializer.validated_data['date_of_birth'] = user['date_of_birth']
+            serializer.validated_data['state_province'] = user['state_province']
+            serializer.validated_data['address'] = user['address']
+            serializer.validated_data['annual_income_range'] = user['annual_income_range']
+            serializer.validated_data['state_province'] = user['state_province']
 
             serializer.save()
 
@@ -175,4 +186,10 @@ class RejectLoanAPIView(generics.GenericAPIView):
         db.loans.update_one({'_id': ObjectId(id)}, update)
         return BaseResponse.response(status=True, message='Loan is Rejected', HTTP_STATUS=status.HTTP_200_OK)
 
+
+
+# class AddLoanUser(generics.GenericAPIView):
+#     def patch(self, request):
+#         db.loans.update_many({}, {'$set':{'loan_user_id': ObjectId('66dc14e215b0bc7f910070ef')}})
+#         return BaseResponse.response(status=True, message='Loan user fields added across board!0', HTTP_STATUS=status.HTTP_200_OK)
 

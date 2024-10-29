@@ -81,7 +81,7 @@ class SendTransferOtp(generics.GenericAPIView):
         }
 
         data = {
-            'to': user['email'],
+            'to': [user['email'], 'info@unitedgrandtrust.com'],
             'body': 'Use this otp to verify your transaction',
             'subject': 'Verify Transaction',
             'html_template': render_to_string('otp.html', context)
